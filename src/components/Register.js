@@ -2,7 +2,7 @@ import React from "react";
 import { useFormik } from "formik";
 import { SignUpSchema } from "../Schemas";
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
 
 const initialValues = {
   name: "",
@@ -12,26 +12,41 @@ const initialValues = {
   age: "",
   grade: "",
   gender: "",
+  city: "",
   password: "",
   confirmPassword: "",
 };
 
 const Register = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
     useFormik({
       initialValues,
       validationSchema: SignUpSchema,
-      onSubmit: (values, action) => {
-        // console.log("🚀 ~ file: Register.js:18 ~ Register ~ values:", values);
-        console.log("🚀 ~ file: Registration.js:11 ~ Register values",values)
-        action.resetForm();
+      onSubmit: async (values, action) => {
+        const payload = {
+          name: values.name,
+          email: values.email,
+          primaryC: values.contactPrimary,
+          secondaryC: values.contactSecondary,
+          age: values.age,
+          grade: values.grade,
+          gender: values.gender,
+          city: values.city,
+          password: values.password,
+        };
+        await axios
+          .post("http://localhost:4678/v1/student/addStudent", payload)
+          .then((res) => {
+            console.log("🚀Register.js:40 ~ .then ~ res:", res.data);
+          })
+          .catch((err) => console.log("axios error??:", err));
+          action.resetForm()
       },
     });
-
-    const handleSignInClick=()=>{
-      navigate("/")
-    }
+  const handleSignInClick = () => {
+    navigate("/");
+  };
   return (
     <div className="container">
       <div className=" d-flex align-items-center justify-content-center min-vh-100 border">
@@ -42,7 +57,10 @@ const Register = () => {
           <form onSubmit={handleSubmit}>
             <div className="d-flex flex-wrap">
               {/* ---------------------------------NAME-------------------- */}
-              <div className="input-block mb-2" style={{ width: "350px", margin: "auto" }}>
+              <div
+                className="input-block mb-2"
+                style={{ width: "350px", margin: "auto" }}
+              >
                 <label htmlFor="name" className="form-label mb-0">
                   Name
                 </label>
@@ -62,7 +80,10 @@ const Register = () => {
                 ) : null}
               </div>
               {/* ------------------------------EMAIL-------------------- */}
-              <div className="input-block mb-2" style={{ width: "350px", margin: "auto" }}>
+              <div
+                className="input-block mb-2"
+                style={{ width: "350px", margin: "auto" }}
+              >
                 <label htmlFor="email" className="form-label mb-0">
                   Email
                 </label>
@@ -82,7 +103,10 @@ const Register = () => {
                 ) : null}
               </div>
               {/* ------------------------------Primary Contact-------------------- */}
-              <div className="input-block mb-2" style={{ width: "350px", margin: "auto" }}>
+              <div
+                className="input-block mb-2"
+                style={{ width: "350px", margin: "auto" }}
+              >
                 <label htmlFor="contactPrimary" className="form-label mb-0">
                   Primary Contact
                 </label>
@@ -104,7 +128,10 @@ const Register = () => {
                 ) : null}
               </div>
               {/* ------------------------------Secondary Contact-------------------- */}
-              <div className="input-block mb-2" style={{ width: "350px", margin: "auto" }}>
+              <div
+                className="input-block mb-2"
+                style={{ width: "350px", margin: "auto" }}
+              >
                 <label htmlFor="contactSecondary" className="form-label mb-0">
                   Secondary Contact
                 </label>
@@ -126,7 +153,10 @@ const Register = () => {
                 ) : null}
               </div>
               {/* ------------------------------AGE-------------------- */}
-              <div className="input-block mb-2" style={{ width: "350px", margin: "auto" }}>
+              <div
+                className="input-block mb-2"
+                style={{ width: "350px", margin: "auto" }}
+              >
                 <label htmlFor="age" className="form-label mb-0">
                   Age
                 </label>
@@ -146,7 +176,10 @@ const Register = () => {
                 ) : null}
               </div>
               {/* ------------------------------GRADE-------------------- */}
-              <div className="input-block mb-2" style={{ width: "350px", margin: "auto" }}>
+              <div
+                className="input-block mb-2"
+                style={{ width: "350px", margin: "auto" }}
+              >
                 <label htmlFor="grade" className="form-label mb-0">
                   Grade
                 </label>
@@ -166,7 +199,10 @@ const Register = () => {
                 ) : null}
               </div>
               {/* ------------------------------GENDER-------------------- */}
-              <div className="input-block mb-2" style={{ width: "350px", margin: "auto" }}>
+              <div
+                className="input-block mb-2"
+                style={{ width: "350px", margin: "auto" }}
+              >
                 <label htmlFor="gender" className="form-label mb-0">
                   Gender
                 </label>
@@ -185,8 +221,34 @@ const Register = () => {
                   <p className="form-error text-danger mb-0">{errors.gender}</p>
                 ) : null}
               </div>
+              {/* ------------------------------CITY-------------------- */}
+              <div
+                className="input-block mb-2"
+                style={{ width: "350px", margin: "auto" }}
+              >
+                <label htmlFor="city" className="form-label mb-0">
+                  City
+                </label>
+                <input
+                  type="text"
+                  id="city"
+                  name="city"
+                  placeholder="city"
+                  className="form-control"
+                  autoComplete="off"
+                  value={values.city}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                />
+                {errors.city && touched.city ? (
+                  <p className="form-error text-danger mb-0">{errors.city}</p>
+                ) : null}
+              </div>
               {/* ------------------------------PASSWORD-------------------- */}
-              <div className="input-block mb-2" style={{ width: "350px", margin: "auto" }}>
+              <div
+                className="input-block mb-2"
+                style={{ width: "350px", margin: "auto" }}
+              >
                 <label htmlFor="password" className="form-label mb-0">
                   Password
                 </label>
@@ -208,7 +270,10 @@ const Register = () => {
                 ) : null}
               </div>
               {/* ----------------------------CONFIRM-PASSWORD-------------------- */}
-              <div className="input-block mb-2" style={{ width: "350px", margin: "auto" }}>
+              <div
+                className="input-block mb-2"
+                style={{ width: "350px", margin: "auto" }}
+              >
                 <label htmlFor="confirmPassword" className="form-label mb-0">
                   Confirm Password
                 </label>
@@ -230,17 +295,22 @@ const Register = () => {
                 ) : null}
               </div>
             </div>
-              <div className="d-grid mt-4 align-items-center  justify-content-center ">
-                <button type="submit" className="btn btn-outline-secondary mb-2">
-                  Submit
-                </button>
-                <>Already have an account? <a
+            <div className="d-grid mt-4 align-items-center  justify-content-center ">
+              <button type="submit" className="btn btn-outline-secondary mb-2">
+                Submit
+              </button>
+              <>
+                Already have an account?{" "}
+                <a
                   onClick={() => handleSignInClick()}
                   className="text-decoration-none text-center"
                 >
-                  <><strong>SingnIn here</strong></>
-                </a></>
-              </div>
+                  <>
+                    <strong>SingnIn here</strong>
+                  </>
+                </a>
+              </>
+            </div>
           </form>
         </div>
       </div>
