@@ -7,6 +7,6 @@ import { userStore } from './store/store'; // Correct import
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Provider store={userStore}>
-    <App />
+    <App/>
   </Provider>
 );

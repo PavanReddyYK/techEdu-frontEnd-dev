@@ -1,5 +1,5 @@
-// import { useSelector } from "react-redux";
-// import SignUp from "./components/SignUp";
+import { useSelector } from "react-redux";
+import SignUp from "./components/SignUp";
 import SignIn from "./components/SignIn";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Register from "./components/Register";

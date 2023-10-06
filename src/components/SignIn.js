@@ -4,30 +4,44 @@ import axios from "axios";
 // import { useDispatch } from "react-redux";
 // import { toggleAction } from "../store/slice";
 import { useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
+import { SignInSchema } from "../Schemas/SignInSchema";
+
+const initialValues = {
+  email: "",
+  password: "",
+};
 
 const SignIn = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
   // const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    axios
-      .post('http://localhost:4678/v1/student/signIn', {email: email,password: password })
-      .then((res) => {
-        console.log(res.data.message);
-        if (res.status === 200) {
-          sessionStorage.setItem("token", res.data.token);
-        } else {
-          console.error("Login failed:", res.data.message);
-        }
-      })
-      .catch((err) => {
-        console.error("Axios error::::", err.message);
-      });
-  };
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
+    useFormik({
+      initialValues,
+      validationSchema: SignInSchema,
+      onSubmit: (values, action) => {
+        axios
+          .post("http://localhost:4678/v1/student/signIn", {
+            email: values.email,
+            password: values.password,
+          })
+          .then((res) => {
+            console.log(res.data.message);
+            if (res.status === 200) {
+              sessionStorage.setItem("token", res.data.token);
+            } else {
+              console.error("Login failed:", res.data.message);
+            }
+          })
+          .catch((err) => {
+            console.error("Axios error::::", err.message);
+          });
+        action.resetForm();
+      },
+    });
+
   const handleToggle = () => {
     // dispatch(toggleAction())
     navigate("/signUp");
@@ -52,21 +66,35 @@ const SignIn = () => {
                 type="email"
                 className="form-control"
                 id="email"
-                onChange={(e) => setEmail(e.target.value)}
+                name="email"
+                autoComplete="off"
+                value={values.email}
+                onBlur={handleBlur}
+                onChange={handleChange}
                 placeholder="enter email"
               />
+              {errors.email && touched.email ? (
+                <h6 className="form-error text-danger mb-0">{errors.email}</h6>
+              ) : null}
             </div>
             <div className="mb-3">
-              <label htmlFor="pass" className="form-label">
+              <label htmlFor="password" className="form-label">
                 password
               </label>
               <input
                 type="password"
                 className="form-control"
-                id="pass"
-                onChange={(e) => setPassword(e.target.value)}
+                id="password"
+                name="password"
+                autoComplete="off"
+                value={values.password}
+                onBlur={handleBlur}
+                onChange={handleChange}
                 placeholder="enter pass"
               />
+              {errors.password && touched.password ? (
+                <h6 className="form-error text-danger mb-0">{errors.password}</h6>
+              ) : null}
             </div>
             <div className="mb-3 d-grid gap-2">
               <button type="submit" className="btn btn-outline-success">

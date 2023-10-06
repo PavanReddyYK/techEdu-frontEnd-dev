@@ -19,7 +19,7 @@ const initialValues = {
 
 const Register = () => {
   const navigate = useNavigate();
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit} =
     useFormik({
       initialValues,
       validationSchema: SignUpSchema,
@@ -41,7 +41,7 @@ const Register = () => {
             console.log("🚀Register.js:40 ~ .then ~ res:", res.data);
           })
           .catch((err) => console.log("axios error??:", err));
-          action.resetForm()
+        action.resetForm();
       },
     });
   const handleSignInClick = () => {
